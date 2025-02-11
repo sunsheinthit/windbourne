@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from .services.balloon_data_service import BalloonDataService
+from .services.wind_vector_service import compute_wind_vector
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -9,7 +10,10 @@ balloon_service = BalloonDataService()
 
 @app.get("/")
 def home():
-    return {"message": "Drone Traffic Simulator API", "data": balloon_service._cached_data}
+    # curr, prev
+    balloon_geo_data = balloon_service._cached_data
+    wind_vector_data = compute_wind_vector(balloon_geo_data[0], balloon_geo_data[1])
+    return {"message": "Drone Traffic Simulator API", "data": wind_vector_data}
 
 @app.get("/balloon_data")
 def get_balloon_data():

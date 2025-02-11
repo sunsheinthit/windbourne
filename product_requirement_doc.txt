@@ -24,10 +24,11 @@
 - **Technology Stack**:
   - Python
   - FastAPI
-  - CRON Jobs (Automation): Automate fetching, processing, and storing of balloon data (every hour).
+  
+  - DONE: CRON Jobs (Automation): Automate fetching, processing, and storing of balloon data (every hour).
   
 - **WindBorne API**:
-  - Gather (latitude, longitude, altitude) data from balloons.
+  - DONE: Gather (latitude, longitude, altitude) data from balloons.
   - Compute wind vectors from collected data.
   
 - **Pathfinding Algorithm**:

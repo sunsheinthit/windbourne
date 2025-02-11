@@ -6,7 +6,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 
 WIND_BORNE_API_URL_CURR = "https://a.windbornesystems.com/treasure/00.json"
-WIND_BORNE_API_URL_PREV = "https://a.windbornesystems.com/treasure/02.json"
+WIND_BORNE_API_URL_PREV = "https://a.windbornesystems.com/treasure/01.json"
 
 class BalloonDataService:
     def __init__(self):
