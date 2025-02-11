@@ -1,0 +1,49 @@
+# Product Requirement Document
+
+## Features and Components
+
+### High-Altitude Drone Traffic Simulator
+- Utilize historical balloon position data to create a "wind weather system."
+- Implement algorithms to find the most efficient path for drones.
+- Use a mapping API for visualization.
+
+### Data Collection (Automate Every _X_ Minutes)
+- Fetch real-time WindBorne balloon data.
+- Compute wind vectors from balloon movement.
+- Create a graph representation of airspace.
+- Implement Dijkstra's algorithm with penalties for strong headwinds.
+- Prioritize paths where wind assists the drone’s movement.
+
+### Visualization
+- Display real-world wind vectors.
+- Plot optimal drone routes.
+
+## Architecture
+
+### Backend
+- **Technology Stack**:
+  - Python
+  - FastAPI
+  - CRON Jobs (Automation): Automate fetching, processing, and storing of balloon data (every hour).
+  
+- **WindBorne API**:
+  - Gather (latitude, longitude, altitude) data from balloons.
+  - Compute wind vectors from collected data.
+  
+- **Pathfinding Algorithm**:
+  - Utilize NetworkX for modeling.
+  - **Nodes**: Represent possible drone locations (latitude, longitude, altitude) with 0.01 interval combinations.
+  - **Edges**: Represent potential drone movement paths.
+  - Assign weights based on distance costs and wind influence (lower weights for wind assistance, higher weights for headwinds).
+  
+- **Integration**:
+  - Overlay computed paths and wind data on a mapping API.
+
+### Frontend
+- **Technology Stack**:
+  - Next.js
+  - Leaflet.js (Mapping): Provides a 2D map with wind vector overlays.
+  - D3.js (Wind Speed Vectors): Integrates with Leaflet.js to display wind vector fields.
+
+---
+This document outlines the key features, data processing mechanisms, and architectural components for the High-Altitude Drone Traffic Simulator project.
