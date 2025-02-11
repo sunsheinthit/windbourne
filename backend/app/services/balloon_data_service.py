@@ -20,7 +20,7 @@ class BalloonDataService:
         self.scheduler.add_job(
             self._update_cache,
             'interval',
-            minutes=0.2,
+            minutes=60,
             id='update_balloon_data'
         )
         self.scheduler.start()
