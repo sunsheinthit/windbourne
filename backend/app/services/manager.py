@@ -20,17 +20,21 @@ class Manager:
         curr, prev = self.Balloon_Data_Service._cached_data
 
         N1 = (
-        -54.17314084918222,
-        87.16537010762544
+               round(-53.407938008732366, 6),
+                round(84.77751305435739, 6)
         )
         N2 = (
-        50.83644821213346,
-        146.69109708752245,
+            round(11.181756110455167, 6),
+            round(142.9604415424002, 6)
         )
         
         # get wind vectors
         wind_vectors = self.Wind_Data_Service.compute_wind_vector(curr, prev)
         self.Route_service.populate_graph(curr, wind_vectors)
+
+        print("OOGE", N1 in self.Route_service.graph)
+        print("OOGE", N2 in self.Route_service.graph)
+
         route, weight = self.Route_service.find_best_path(N1, N2)
 
         return route, weight

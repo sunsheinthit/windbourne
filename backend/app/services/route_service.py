@@ -21,6 +21,7 @@ class RouteService:
         """
         self.graph = nx.DiGraph()  # Directed graph
         self.grid_step = grid_step  # Grid resolution
+        self.epsilon = 0.01 #error tolerance
 
     def find_best_path(self, start_point, end_point):
         """
@@ -60,46 +61,100 @@ class RouteService:
         """Populate Graph Nodes and Edges"""
         # nodes
         for node, wind_vector in zip(node_list, wind_vector_list):
-            self._add_node(node, wind_vector)
+            lat, lon, = float(node['latitude']), float(node['longitude'])
+            self._add_node((lat, lon), wind_vector)
+
         print(f"Added {len(self.graph.nodes)} nodes to graph")
-        print(self.graph.nodes)
+        for node, data in self.graph.nodes(data=True):
+            # Open file in write mode
+            with open('node_data.txt', 'w') as f:
+                for node, data in self.graph.nodes(data=True):
+                    f.write(f"Node: {node}, Data: {data}\n")
+                    print(f"Node: {node}, Data: {data}")  # Keep the print statement if you still want console output
+
+
         # edges
         for node in node_list:
-            self._add_edges(node)
+            lat, lon, = float(node['latitude']), float(node['longitude'])
+            self._add_edges((lat, lon))
+
         print(f"Added {len(self.graph.edges)} edges to graph")
+
 
 
     def _add_node(self, node, wind_vector):
         """Add a node representing a location in airspace."""
-        lat, lon, = float(node['latitude']), float(node['longitude'])
-        self.graph.add_node((lat, lon), wind_vector=wind_vector)
+        self.graph.add_node(node, wind_vector=wind_vector)
 
+    # def _add_edges(self, node):
+    #     """
+    #     Add edges from the given node to its neighboring nodes in cardinal directions.
+        
+    #     Args:
+    #         node (tuple): Current node coordinates (lat, lon)
+    #     """
+    #     lat, lon = node
+    #     # Define neighboring positions using grid_step
+    #     neighbors = [
+    #         (lat + self.grid_step, lon),    # North
+    #         (lat - self.grid_step, lon),    # South
+    #         (lat, lon + self.grid_step),    # East
+    #         (lat, lon - self.grid_step)     # West
+    #     ]
+        
+    #         # Add edges only to nodes that actually exist in the graph
+    #     for neighbor in neighbors:
+    #         # Find the closest existing node within the epsilon range
+    #         closest_existing_node = []
+    #         for existing_node in self.graph.nodes:
+    #             if (
+    #                 abs(existing_node[0] - neighbor[0]) < self.epsilon and 
+    #                 abs(existing_node[1] - neighbor[1]) < self.epsilon
+    #             ):
+    #                 closest_existing_node.append(existing_node)
+    #                 break  # Stop searching once we find a match
+            
+    #         if len(closest_existing_node) > 25:
+    #             # Compute weight and add edge in both directions
+    #             weight = self._compute_weight(node, closest_existing_node)
+    #             reverse_weight = self._compute_weight(closest_existing_node, node)
+
+    #             self.graph.add_edge(node, closest_existing_node, weight=weight)
+    #             self.graph.add_edge(closest_existing_node, node, weight=reverse_weight)
     def _add_edges(self, node):
-        """
-        Add edges from the given node to its neighboring nodes in cardinal directions.
+        """Add edges from the given node to its neighboring nodes."""
+        current_node = node[0], node[1]
+        print(f"\nTrying to add edges for node: {current_node}")
         
-        Args:
-            node (tuple): Current node coordinates (lat, lon)
-        """
-        lat, lon, = float(node['latitude']), float(node['longitude'])
-        # Define neighboring positions using grid_step
-        neighbors = [
-            (lat + self.grid_step, lon),    # North
-            (lat - self.grid_step, lon),    # South
-            (lat, lon + self.grid_step),    # East
-            (lat, lon - self.grid_step)     # West
-        ]
-        
-        # Add edges to existing neighbors
-        for neighbor in neighbors:
-            if neighbor in self.graph:
+        edges_added = 0
+        # Connect to all nodes within reasonable distance
+        for other_node in self.graph.nodes():
+            if other_node == current_node:
+                continue
+                
+            # Calculate Manhattan distance (since we rounded to integers)
+            lat_diff = abs(current_node[0] - other_node[0])
+            lon_diff = abs(current_node[1] - other_node[1])
+            manhattan_dist = lat_diff + lon_diff
+            
+            print(f"Checking potential neighbor: {other_node}")
+            print(f"Manhattan distance: {manhattan_dist}")
+            
+            # Connect if within 3 grid units (adjust this value as needed)
+            if manhattan_dist <= 20:
+                print(f"Adding edge to neighbor: {other_node}")
                 # Add directed edge from current node to neighbor
-                weight = self._compute_weight(node, neighbor)
-                self.graph.add_edge(node, neighbor, weight=weight)
+                weight = self._compute_weight(current_node, other_node)
+                self.graph.add_edge(current_node, other_node, weight=weight)
                 
                 # Add directed edge from neighbor to current node
-                reverse_weight = self._compute_weight(neighbor, node)
-                self.graph.add_edge(neighbor, node, weight=reverse_weight)
+                reverse_weight = self._compute_weight(other_node, current_node)
+                self.graph.add_edge(other_node, current_node, weight=reverse_weight)
+                
+                edges_added += 2
+        
+        print(f"Total edges added for node {current_node}: {edges_added}")
+
 
     def _compute_weight(self, start_node, end_node):
         # compute distance
@@ -109,7 +164,8 @@ class RouteService:
         end_lat, end_lon = end_node
 
         distance = geodesic((start_lat, start_lon), (end_lat, end_lon)).kilometers
-        wind_vector = self.graph.nodes[(start_lat, start_lon)]['wind_vector'] # wind vector is needed here
+
+        wind_vector = self.graph.nodes[start_node]['wind_vector'] # wind vector is needed here
 
         # Calculate movement direction vector
         movement_vector = np.array([end_lon - start_lon, end_lat - start_lat])

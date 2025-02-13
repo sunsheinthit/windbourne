@@ -55,9 +55,9 @@ class BalloonDataService:
                 logging.warning(f"Invalid data found: {entry}, skipping...")
                 continue  # Skip this invalid entry
             hourly_data.append({
-                "latitude": lat, 
-                "longitude": lon, 
-                "altitude": alt,
+                "latitude": round(lat, 6),
+                "longitude": round(lon, 6),
+                "altitude": round(alt, 6),
             })
 
         return hourly_data
