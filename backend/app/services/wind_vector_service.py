@@ -3,8 +3,8 @@ from geopy.distance import geodesic
 
 class WindDataService:
     def __init__(self):
-        self.wind_vectors = []
-        self.wind_speed_directions = []
+        self.wind_vectors = [] #{(u, v)} wind vector
+        self.wind_speed_directions = [] # {"speed": speed, "direction": direction}
 
     def compute_wind_vector(self, curr_data, prev_data):
         """
@@ -22,8 +22,6 @@ class WindDataService:
             lat1, lon1  = float(prev_data['latitude']), float(prev_data['longitude'])
             lat2, lon2 = float(curr_data['latitude']), float(curr_data['longitude'])
 
-            print("HELLO WOLRD",lat1,lat1)
-            print(type(lat1),type(lat1))
             # Time difference of 1 hour
             dt = 3600 # seconds
 

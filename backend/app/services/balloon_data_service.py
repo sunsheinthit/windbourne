@@ -11,7 +11,7 @@ WIND_BORNE_API_URL_PREV = "https://a.windbornesystems.com/treasure/01.json"
 class BalloonDataService:
     def __init__(self):
         self.balloon_data = self._fetch_balloon_data()
-        self._cached_data = []
+        self._cached_data = [] # [[curr], [prev]]
         self._last_update = None
         self.scheduler = BackgroundScheduler()
 

@@ -5,6 +5,9 @@
 ### High-Altitude Drone Traffic Simulator
 - Utilize historical balloon position data to create a "wind weather system."
 - Implement algorithms to find the most efficient path for drones.
+- i. Pick two arbitrary points
+- ii. Find the closest valid points (nodes) from your graph.
+- iii. Find an optimal path between the two points considering wind assistance and resistance.
 - Use a mapping API for visualization.
 
 ### Data Collection (Automate Every _X_ Minutes)
