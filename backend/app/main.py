@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from .services.balloon_data_service import BalloonDataService
 from .services.wind_vector_service import WindDataService
+from .services.route_service import RouteService
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -8,14 +9,27 @@ app = FastAPI()
 # Initialize BalloonDataService
 balloon_service = BalloonDataService()
 wind_data_service = WindDataService()
+route = RouteService()
+
+n1 = (
+    -54.91785213157841,
+    89.28581606425566,
+)
+n2 = (
+    -55.29865992946588,
+    90.31708697052485,
+)
+
 
 @app.get("/")
 def home():
     # curr, prev
     balloon_geo_data = balloon_service._cached_data
-    wind_vector_data = wind_data_service.compute_wind_vector(balloon_geo_data[0], balloon_geo_data[1])
+    wind_data_service.compute_wind_vector(balloon_geo_data[0], balloon_geo_data[1])
     wind_speed_direction = wind_data_service.compute_wind_speed_direction()
-    return {"message": "Drone Traffic Simulator API", "data — speed and direction": wind_speed_direction}
+    wv = wind_data_service.wind_vectors[0]
+    w = route.compute_weight(n1, n2, wv)
+    return {"message": "Drone Traffic Simulator API", "weight — ": w,"data — speed and direction": wind_speed_direction}
 
 @app.get("/balloon_data")
 def get_balloon_data():

@@ -19,8 +19,8 @@ class WindDataService:
         """
 
         for prev_data, curr_data in zip(curr_data, prev_data):
-            lat1, lon1, alt1 = float(prev_data['latitude']), float(prev_data['longitude']), float(prev_data['altitude'])
-            lat2, lon2, alt2 = float(curr_data['latitude']), float(curr_data['longitude']), float(curr_data['altitude'])
+            lat1, lon1  = float(prev_data['latitude']), float(prev_data['longitude'])
+            lat2, lon2 = float(curr_data['latitude']), float(curr_data['longitude'])
 
             print("HELLO WOLRD",lat1,lat1)
             print(type(lat1),type(lat1))
@@ -38,21 +38,20 @@ class WindDataService:
             # Compute wind components (u, v)
             u = (d_horiz / dt) * np.sin(azimuth)  # East-West component
             v = (d_horiz / dt) * np.cos(azimuth)  # North-South component
-            w = (alt2 - alt1) / dt  # Vertical component
 
-            self.wind_vectors.append((u, v, w))
+            self.wind_vectors.append((u, v))
 
         return self.wind_vectors
 
 
     def compute_wind_speed_direction(self):
         
-        for u, v, w in self.wind_vectors:
+        for u, v in self.wind_vectors:
             speed = np.sqrt(u**2 + v**2)  # Magnitude of wind vector
             direction = np.degrees(np.arctan2(u, v))  # Convert to degrees
             direction = (direction + 360) % 360  # Normalize to 0-360°
 
-            self.wind_speed_directions.append({"speed": speed, "direction": direction, "vertical_speed": w})
+            self.wind_speed_directions.append({"speed": speed, "direction": direction})
 
         return self.wind_speed_directions
 
