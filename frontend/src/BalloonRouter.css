@@ -1,7 +1,29 @@
 .balloon-router {
   display: flex;
+  flex-direction: column;
   height: 100vh;
-  width: 100vw;
+}
+
+.readme-section {
+  padding: 2.5px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.readme-section h1 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.readme-section p {
+  margin-bottom: 10px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.form-and-map-container {
+  display: flex;
+  flex: 1;
 }
 
 .form-container {
@@ -9,10 +31,14 @@
   padding: 20px;
   background-color: #f8f9fa;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  overflow-y: auto; /* In case form gets too tall */
+  overflow-y: auto;
 }
 
 .map-container {
   flex: 1;
   height: 100%;
+}
+
+.disclaimer {
+  font-weight: bold;
 }

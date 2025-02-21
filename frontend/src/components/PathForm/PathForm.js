@@ -74,7 +74,7 @@ function PathForm({ onRouteCalculated }) {
       <h2 className="formTitle">Route Calculator</h2>
       <p className="formDescription">
         Enter your start and destination cities to calculate the optimal balloon
-        route.
+        route based on distance and wind influence.
       </p>
 
       <form onSubmit={handleSubmit}>
