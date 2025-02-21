@@ -138,7 +138,7 @@ class RouteService:
         manhattan_dists = lat_diffs + lon_diffs
         
         # Find valid neighbors (within distance threshold and not self)
-        valid_neighbors = (manhattan_dists <= 25) & (manhattan_dists > 0)
+        valid_neighbors = (manhattan_dists <= 20) & (manhattan_dists > 0)
         neighbor_nodes = all_nodes[valid_neighbors]
         
         edges_added = 0
