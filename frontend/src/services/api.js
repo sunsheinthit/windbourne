@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8000";
+// const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "https://windbourne.onrender.com";
 
 export const balloon_service = {
   // Get wind data for the map
