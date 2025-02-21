@@ -35,6 +35,7 @@ class RouteService:
                   total_distance is the cumulative weighted distance
         """
         try:
+            
             # Find the shortest path using Dijkstra's algorithm
             path = nx.shortest_path(
                 self.graph, 
@@ -106,7 +107,7 @@ class RouteService:
             print(f"Manhattan distance: {manhattan_dist}")
             
             # Connect if within 3 grid units (adjust this value as needed)
-            if manhattan_dist <= 20:
+            if manhattan_dist <= 25:
                 print(f"Adding edge to neighbor: {other_node}")
                 # Add directed edge from current node to neighbor
                 weight = self._compute_weight(current_node, other_node)
@@ -146,6 +147,6 @@ class RouteService:
         wind_effect = wind_alignment * wind_magnitude
         
         # Adjust weight based on wind (tailwind reduces weight, headwind increases it)
-        adjusted_weight = distance * (1 - 0.2 * wind_effect)  # 20% wind influence
+        adjusted_weight = distance * (1 - 0.05 * wind_effect)  # 20% wind influence
         
         return max(0.1 * distance, adjusted_weight)  # Ensure weight stays positive

@@ -1,11 +1,11 @@
 import "./App.css";
-import Map from "./components/Map/Map";
+import BalloonRouter from "./BalloonRouter";
 
 function App() {
   return (
-    <div className="App">
-      <Map />
-    </div>
+    <>
+      <BalloonRouter />
+    </>
   );
 }
 

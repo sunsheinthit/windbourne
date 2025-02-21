@@ -1,0 +1,18 @@
+.balloon-router {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.form-container {
+  width: 400px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* In case form gets too tall */
+}
+
+.map-container {
+  flex: 1;
+  height: 100%;
+}

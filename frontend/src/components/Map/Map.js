@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import L from "leaflet";
 import { balloon_service } from "../../services/api";
-import PathForm from "../Controls/PathForm";
+import PathForm from "../PathForm/PathForm.js";
+import "./Map.css";
 
-function Map() {
+function Map({ routeData }) {
   const mapRef = useRef(null); // ref is used so it is initialized only once
   const mapContainerRef = useRef(null);
   const [balloonData, setBalloonData] = useState(null);
@@ -111,13 +112,59 @@ function Map() {
           }
         }
       });
+
+      // Add route rendering
+      if (routeData) {
+        // Clear existing route by removing layers with the 'route' className
+        mapRef.current.eachLayer((layer) => {
+          if (layer.options.className === "route") {
+            layer.remove();
+          }
+        });
+
+        // Draw the new route
+        L.polyline(routeData, {
+          color: "green",
+          weight: 3,
+          opacity: 0.7,
+        }).addTo(mapRef.current);
+
+        // Add markers for start and end points
+        if (routeData.length > 0) {
+          const startIcon = L.divIcon({
+            className: "custom-marker",
+            html: `<div style="background-color: green; width: 25px; height: 25px; border-radius: 50%; border: 2px solid white;"></div>`,
+            iconSize: [25, 25],
+            iconAnchor: [12, 12],
+          });
+
+          const endIcon = L.divIcon({
+            className: "custom-marker",
+            html: `<div style="background-color: red; width: 25px; height: 25px; border-radius: 50%; border: 2px solid white;"></div>`,
+            iconSize: [25, 25],
+            iconAnchor: [12, 12],
+          });
+
+          L.marker(routeData[0], { icon: startIcon })
+            .addTo(mapRef.current)
+            .bindPopup("Start");
+
+          L.marker(routeData[routeData.length - 1], { icon: endIcon })
+            .addTo(mapRef.current)
+            .bindPopup("End");
+
+          // Fit map bounds to show the entire route
+          mapRef.current.fitBounds(routeData);
+        }
+      }
     }
-  }, [balloonData, windData]);
+  }, [balloonData, windData, routeData]);
 
   return (
-    <div className="MapContainer">
-      {/* <PathForm /> */}
-      <div ref={mapContainerRef} style={{ height: "100%", width: "100%" }} />
+    <div className="Hero-Container">
+      <div className="MapContainer">
+        <div ref={mapContainerRef} style={{ height: "100%", width: "100%" }} />
+      </div>
     </div>
   );
 }

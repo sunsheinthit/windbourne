@@ -16,12 +16,16 @@ export const balloon_service = {
   },
 
   // Calculate path between two points
-  calculatePath: async (start, end) => {
-    const response = await axios.post(
+  calculateShortestPath: async (start, end) => {
+    const response = await axios.get(
       `${API_BASE_URL}/calculate-shortest-path`,
       {
-        start_point: start,
-        end_point: end,
+        params: {
+          start_lat: start.latitude,
+          start_lon: start.longitude,
+          end_lat: end.latitude,
+          end_lon: end.longitude,
+        },
       }
     );
     return response.data;

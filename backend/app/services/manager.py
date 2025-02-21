@@ -15,26 +15,14 @@ class Manager:
     def stop_data_collection(self):
         self.Balloon_Data_Service.stop()
     
-    def get_shortest_path(self):
+    def get_shortest_path(self, start_balloon, end_balloon):
         # get the balloon geolocation data 
         curr, prev = self.Balloon_Data_Service._cached_data
 
-        N1 = (
-               round(-53.407938008732366, 6),
-                round(84.77751305435739, 6)
-        )
-        N2 = (
-            round(11.181756110455167, 6),
-            round(142.9604415424002, 6)
-        )
-        
         # get wind vectors
         wind_vectors = self.Wind_Data_Service.compute_wind_vector(curr, prev)
         self.Route_service.populate_graph(curr, wind_vectors)
 
-        print("OOGE", N1 in self.Route_service.graph)
-        print("OOGE", N2 in self.Route_service.graph)
-
-        route, weight = self.Route_service.find_best_path(N1, N2)
+        route, weight = self.Route_service.find_best_path(start_balloon, end_balloon)
 
         return route, weight
