@@ -123,6 +123,10 @@ class RouteService:
     def _add_edges(self, node):
         """Add edges from the given node to its neighboring nodes."""
         current_node = node[0], node[1]
+        print("OOGA BOOGA", current_node)
+        if node is None:
+            print("Warning: Received None node")
+            
         print(f"\nTrying to add edges for node: {current_node}")
         
         # Convert nodes to numpy array for vectorized operations
@@ -134,7 +138,7 @@ class RouteService:
         manhattan_dists = lat_diffs + lon_diffs
         
         # Find valid neighbors (within distance threshold and not self)
-        valid_neighbors = (manhattan_dists <= 10) & (manhattan_dists > 0)
+        valid_neighbors = (manhattan_dists <= 25) & (manhattan_dists > 0)
         neighbor_nodes = all_nodes[valid_neighbors]
         
         edges_added = 0
@@ -180,6 +184,6 @@ class RouteService:
         wind_effect = wind_alignment * wind_magnitude
         
         # Adjust weight based on wind (tailwind reduces weight, headwind increases it)
-        adjusted_weight = distance * (1 - 0.025 * wind_effect)  # 20% wind influence
+        adjusted_weight = distance * (1 - 0.001 * wind_effect)  # 10% wind influence
         
-        return max(0.1 * distance, adjusted_weight)  # Ensure weight stays positive
+        return max(0.5 * distance, adjusted_weight)  # Ensure weight stays positive

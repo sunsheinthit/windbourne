@@ -55,9 +55,19 @@ function PathForm({ onRouteCalculated }) {
           longitude: Math.round(endCoords.longitude * 1000000) / 1000000,
         }
       );
-      const routeCoords = response.route.map((point) =>
-        Array.isArray(point) ? point : [point.latitude, point.longitude]
-      );
+      console.log(response);
+
+      // const routeCoords = response.route.map((point) =>
+      //   Array.isArray(point) ? point : [point.latitude, point.longitude]
+      // );
+      const routeCoords = response?.route
+        ? response.route.map((point) =>
+            Array.isArray(point) ? point : [point.latitude, point.longitude]
+          )
+        : [
+            [startCoords.latitude, startCoords.longitude],
+            [endCoords.latitude, endCoords.longitude],
+          ];
 
       onRouteCalculated(routeCoords);
       setSuccess(true);
