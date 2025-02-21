@@ -117,7 +117,10 @@ function Map({ routeData }) {
       if (routeData) {
         // Clear existing route by removing layers with the 'route' className
         mapRef.current.eachLayer((layer) => {
-          if (layer.options.className === "route") {
+          if (
+            layer.options.className === "route" ||
+            layer.options.className === "route-marker"
+          ) {
             layer.remove();
           }
         });
@@ -127,29 +130,33 @@ function Map({ routeData }) {
           color: "green",
           weight: 3,
           opacity: 0.7,
+          className: "route",
         }).addTo(mapRef.current);
 
         // Add markers for start and end points
         if (routeData.length > 0) {
           const startIcon = L.divIcon({
-            className: "custom-marker",
+            className: "route-marker",
             html: `<div style="background-color: green; width: 25px; height: 25px; border-radius: 50%; border: 2px solid white;"></div>`,
             iconSize: [25, 25],
             iconAnchor: [12, 12],
           });
 
           const endIcon = L.divIcon({
-            className: "custom-marker",
+            className: "route-marker",
             html: `<div style="background-color: red; width: 25px; height: 25px; border-radius: 50%; border: 2px solid white;"></div>`,
             iconSize: [25, 25],
             iconAnchor: [12, 12],
           });
 
-          L.marker(routeData[0], { icon: startIcon })
+          L.marker(routeData[0], { icon: startIcon, className: "route-marker" })
             .addTo(mapRef.current)
             .bindPopup("Start");
 
-          L.marker(routeData[routeData.length - 1], { icon: endIcon })
+          L.marker(routeData[routeData.length - 1], {
+            icon: endIcon,
+            className: "route-marker",
+          })
             .addTo(mapRef.current)
             .bindPopup("End");
 
