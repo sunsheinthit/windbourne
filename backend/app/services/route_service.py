@@ -147,6 +147,6 @@ class RouteService:
         wind_effect = wind_alignment * wind_magnitude
         
         # Adjust weight based on wind (tailwind reduces weight, headwind increases it)
-        adjusted_weight = distance * (1 - 0.05 * wind_effect)  # 20% wind influence
+        adjusted_weight = distance * (1 - 0.025 * wind_effect)  # 20% wind influence
         
         return max(0.1 * distance, adjusted_weight)  # Ensure weight stays positive
