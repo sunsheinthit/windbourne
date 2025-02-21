@@ -87,40 +87,73 @@ class RouteService:
         """Add a node representing a location in airspace."""
         self.graph.add_node(node, wind_vector=wind_vector)
 
+    # def _add_edges(self, node):
+    #     """Add edges from the given node to its neighboring nodes."""
+    #     current_node = node[0], node[1]
+    #     print(f"\nTrying to add edges for node: {current_node}")
+        
+    #     edges_added = 0
+    #     # Connect to all nodes within reasonable distance
+    #     for other_node in self.graph.nodes():
+    #         if other_node == current_node:
+    #             continue
+                
+    #         # Calculate Manhattan distance (since we rounded to integers)
+    #         lat_diff = abs(current_node[0] - other_node[0])
+    #         lon_diff = abs(current_node[1] - other_node[1])
+    #         manhattan_dist = lat_diff + lon_diff
+            
+    #         print(f"Checking potential neighbor: {other_node}")
+    #         print(f"Manhattan distance: {manhattan_dist}")
+            
+    #         # Connect if within 3 grid units (adjust this value as needed)
+    #         if manhattan_dist <= 10:
+    #             print(f"Adding edge to neighbor: {other_node}")
+    #             # Add directed edge from current node to neighbor
+    #             weight = self._compute_weight(current_node, other_node)
+    #             self.graph.add_edge(current_node, other_node, weight=weight)
+                
+    #             # Add directed edge from neighbor to current node
+    #             reverse_weight = self._compute_weight(other_node, current_node)
+    #             self.graph.add_edge(other_node, current_node, weight=reverse_weight)
+                
+    #             edges_added += 2
+        
+    #     print(f"Total edges added for node {current_node}: {edges_added}")
     def _add_edges(self, node):
         """Add edges from the given node to its neighboring nodes."""
         current_node = node[0], node[1]
         print(f"\nTrying to add edges for node: {current_node}")
         
+        # Convert nodes to numpy array for vectorized operations
+        all_nodes = np.array(list(self.graph.nodes()))
+        
+        # Calculate all distances at once
+        lat_diffs = np.abs(all_nodes[:, 0] - current_node[0])
+        lon_diffs = np.abs(all_nodes[:, 1] - current_node[1])
+        manhattan_dists = lat_diffs + lon_diffs
+        
+        # Find valid neighbors (within distance threshold and not self)
+        valid_neighbors = (manhattan_dists <= 10) & (manhattan_dists > 0)
+        neighbor_nodes = all_nodes[valid_neighbors]
+        
         edges_added = 0
-        # Connect to all nodes within reasonable distance
-        for other_node in self.graph.nodes():
-            if other_node == current_node:
-                continue
-                
-            # Calculate Manhattan distance (since we rounded to integers)
-            lat_diff = abs(current_node[0] - other_node[0])
-            lon_diff = abs(current_node[1] - other_node[1])
-            manhattan_dist = lat_diff + lon_diff
+        # Add edges for valid neighbors
+        for neighbor in neighbor_nodes:
+            neighbor_tuple = tuple(neighbor)
+            print(f"Checking potential neighbor: {neighbor_tuple}")
+            print(f"Manhattan distance: {manhattan_dists[np.where((all_nodes == neighbor).all(axis=1))[0][0]]}")
+            print(f"Adding edge to neighbor: {neighbor_tuple}")
             
-            print(f"Checking potential neighbor: {other_node}")
-            print(f"Manhattan distance: {manhattan_dist}")
+            weight = self._compute_weight(current_node, neighbor_tuple)
+            self.graph.add_edge(current_node, neighbor_tuple, weight=weight)
             
-            # Connect if within 3 grid units (adjust this value as needed)
-            if manhattan_dist <= 25:
-                print(f"Adding edge to neighbor: {other_node}")
-                # Add directed edge from current node to neighbor
-                weight = self._compute_weight(current_node, other_node)
-                self.graph.add_edge(current_node, other_node, weight=weight)
-                
-                # Add directed edge from neighbor to current node
-                reverse_weight = self._compute_weight(other_node, current_node)
-                self.graph.add_edge(other_node, current_node, weight=reverse_weight)
-                
-                edges_added += 2
+            reverse_weight = self._compute_weight(neighbor_tuple, current_node)
+            self.graph.add_edge(neighbor_tuple, current_node, weight=reverse_weight)
+            
+            edges_added += 2
         
         print(f"Total edges added for node {current_node}: {edges_added}")
-
 
     def _compute_weight(self, start_node, end_node):
         # compute distance
