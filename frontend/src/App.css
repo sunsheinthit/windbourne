@@ -1,0 +1,22 @@
+.App {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Aligns content to the left */
+}
+
+/* Reset default margins and padding */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.MapContainer {
+  height: 70vh;
+  width: 75vw;
+  margin-right: 2.5vw;
+}

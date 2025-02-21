@@ -18,6 +18,7 @@ class WindDataService:
             tuple: (u, v, w) wind vector components in m/s
         """
 
+        self.wind_vectors = [] 
         for prev_data, curr_data in zip(curr_data, prev_data):
             lat1, lon1  = float(prev_data['latitude']), float(prev_data['longitude'])
             lat2, lon2 = float(curr_data['latitude']), float(curr_data['longitude'])
@@ -39,10 +40,13 @@ class WindDataService:
 
             self.wind_vectors.append((u, v))
 
+    
+
         return self.wind_vectors
 
 
     def compute_wind_speed_direction(self):
+        self.wind_speed_directions = []  
         
         for u, v in self.wind_vectors:
             speed = np.sqrt(u**2 + v**2)  # Magnitude of wind vector
