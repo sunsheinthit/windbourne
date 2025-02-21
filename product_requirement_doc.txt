@@ -45,7 +45,7 @@
 
 ### Frontend
 - **Technology Stack**:
-  - Next.js
+  - React.js
   - Leaflet.js (Mapping): Provides a 2D map with wind vector overlays.
   - D3.js (Wind Speed Vectors): Integrates with Leaflet.js to display wind vector fields.
 

@@ -86,41 +86,6 @@ class RouteService:
         """Add a node representing a location in airspace."""
         self.graph.add_node(node, wind_vector=wind_vector)
 
-    # def _add_edges(self, node):
-    #     """
-    #     Add edges from the given node to its neighboring nodes in cardinal directions.
-        
-    #     Args:
-    #         node (tuple): Current node coordinates (lat, lon)
-    #     """
-    #     lat, lon = node
-    #     # Define neighboring positions using grid_step
-    #     neighbors = [
-    #         (lat + self.grid_step, lon),    # North
-    #         (lat - self.grid_step, lon),    # South
-    #         (lat, lon + self.grid_step),    # East
-    #         (lat, lon - self.grid_step)     # West
-    #     ]
-        
-    #         # Add edges only to nodes that actually exist in the graph
-    #     for neighbor in neighbors:
-    #         # Find the closest existing node within the epsilon range
-    #         closest_existing_node = []
-    #         for existing_node in self.graph.nodes:
-    #             if (
-    #                 abs(existing_node[0] - neighbor[0]) < self.epsilon and 
-    #                 abs(existing_node[1] - neighbor[1]) < self.epsilon
-    #             ):
-    #                 closest_existing_node.append(existing_node)
-    #                 break  # Stop searching once we find a match
-            
-    #         if len(closest_existing_node) > 25:
-    #             # Compute weight and add edge in both directions
-    #             weight = self._compute_weight(node, closest_existing_node)
-    #             reverse_weight = self._compute_weight(closest_existing_node, node)
-
-    #             self.graph.add_edge(node, closest_existing_node, weight=weight)
-    #             self.graph.add_edge(closest_existing_node, node, weight=reverse_weight)
     def _add_edges(self, node):
         """Add edges from the given node to its neighboring nodes."""
         current_node = node[0], node[1]
