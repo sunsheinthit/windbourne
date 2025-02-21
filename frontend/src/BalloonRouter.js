@@ -33,8 +33,10 @@ function BalloonRouter() {
           path. I hosted the frontend on Netlify and the backend on Render.
         </p>
         <p className="disclaimer">
-          Please be patient as the hosted backend may need to cold-start and the
-          algorithm itself may take a min.
+          Please be patient as the hosted backend may need a couple minutes to
+          cold-start and the algorithm itself may take a min. It will be ready
+          when the markers appear on the map. Also, click over the balloons and
+          red arrows for more information!
         </p>
       </div>
       <div className="form-and-map-container">
